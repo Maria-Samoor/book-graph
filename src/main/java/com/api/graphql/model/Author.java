@@ -1,35 +1,24 @@
 package com.api.graphql.model;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Represents an author with an ID and a name.
- *
- * @param id the unique identifier of the author.
- * @param name the name of the author.
  */
-public record Author(Integer id,
-                     String name) {
+@Data
+@NoArgsConstructor
+@Document(collection = "author")
+public class Author {
 
-    /**
-     * A static list of sample authors used for testing and demo purposes.
-     */
-    public static List<Author> authors = Arrays.asList(
-            new Author(1,"author A"),
-            new Author (2, "author B")
-    );
+    @Id
+    private Integer id; // The unique identifier for the author.
 
-    /**
-     * Retrieves an author by their ID.
-     *
-     * @param id the ID of the author to retrieve.
-     * @return an {@link Optional} containing the {@link Author} if found, otherwise empty.
-     */
-    public static Optional<Author> getAuthorById(Integer id) {
-        return authors.stream()
-                .filter(author -> author.id.equals(id))
-                .findFirst();
-    }
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    private String name; // The name of the author.
 }
